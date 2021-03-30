@@ -15,12 +15,12 @@ public class EmailSender {
     public static boolean sendEmail(String mailSubject, String emailMessage, String destinationEmail) {
         boolean otpSend = false;
 
-        Email from = new Email("akgarg0472@gmail.com");
+        Email from = new Email("Sender-Email-Comes-Here");
         Email to = new Email(destinationEmail);
 
         Content content = new Content("text/html", emailMessage);
         Mail mail = new Mail(from, mailSubject, to, content);
-        SendGrid sg = new SendGrid("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");
+        SendGrid sg = new SendGrid("API-Key-Goes-Here");
         Request request = new Request();
 
         try {
