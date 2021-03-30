@@ -2,7 +2,6 @@ package com.akgarg.servlets;
 
 import com.akgarg.entity.User;
 
-import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -12,8 +11,7 @@ import java.io.IOException;
 public class LogoutHandlerServlet extends HttpServlet {
 
     @Override
-    protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-
+    protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws IOException {
         HttpSession session = req.getSession();
 
         User user = (User) session.getAttribute("currentLoginUser");
@@ -25,7 +23,6 @@ public class LogoutHandlerServlet extends HttpServlet {
             resp.setHeader("Pragma", "no-cache");
             resp.setHeader("Expires", "0");
             session.setAttribute("currentLoginUser", null);
-
             resp.sendRedirect("login");
         } else {
             resp.sendRedirect("index");

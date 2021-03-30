@@ -4,7 +4,6 @@ import com.akgarg.dao.UserDao;
 import com.akgarg.entity.User;
 import com.akgarg.helper.DatabaseConnectionHelper;
 
-import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -15,7 +14,7 @@ import java.io.PrintWriter;
 public class LoginHandlerServlet extends HttpServlet {
 
     @Override
-    protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws IOException, ServletException {
+    protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws IOException {
         HttpSession session = req.getSession();
         PrintWriter writer = resp.getWriter();
 
@@ -27,6 +26,7 @@ public class LoginHandlerServlet extends HttpServlet {
         // this response is used to check the server response by the javascript
         UserDao dao = new UserDao(DatabaseConnectionHelper.getConnection());
         User user = dao.getUserUsingEmail(loginEmail);
+        DatabaseConnectionHelper.closeConnections();
 
         if (user == null) {
             writer.println("404");

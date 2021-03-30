@@ -10,7 +10,13 @@ public class DatabaseConnectionHelper {
         if (connection == null) {
             try {
                 Class.forName("com.mysql.cj.jdbc.Driver");
-                connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/servletdatabase", "root", "root");
+                String dbName = "sql6402457";
+                String userName = "sql6402457";
+                String password = "3hcPyg8afh";
+                String hostname = "sql6.freemysqlhosting.net";
+                String port = "3306";
+                String jdbcUrl = "jdbc:mysql://" + hostname + ":" + port + "/" + dbName + "?user=" + userName + "&password=" + password;
+                connection = DriverManager.getConnection(jdbcUrl);
             } catch (Exception e) {
                 e.printStackTrace();
             }

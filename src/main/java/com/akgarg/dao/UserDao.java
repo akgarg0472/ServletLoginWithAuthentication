@@ -7,8 +7,8 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.Statement;
 
+@SuppressWarnings("unused")
 public class UserDao {
-
     private final Connection connection;
     private PreparedStatement preparedStatement;
     private Statement statement;
@@ -62,14 +62,13 @@ public class UserDao {
             if (preparedStatement.executeUpdate() == 1) {
                 isUpdated = true;
             }
-
         } catch (Exception e) {
             System.out.println("Exception in updating user info: " + e.getClass() + ", " + e.getMessage());
         }
         return isUpdated;
     }
 
-    public boolean updateUser(String username, String email, String password, String confirmPassword) {
+    public boolean updateUser(String username, String email, String password) {
         String query = "UPDATE users set password=? WHERE username=? AND email=?";
         boolean isUpdated = false;
 
@@ -94,7 +93,7 @@ public class UserDao {
         try {
             statement = connection.createStatement();
             resultSet = statement.executeQuery(query);
-            User user = null;
+            User user;
 
             if (resultSet != null && resultSet.next()) {
                 user = new User(
@@ -106,17 +105,17 @@ public class UserDao {
         } catch (Exception e) {
             System.out.println("Exception in getting user info: " + e.getClass() + ", " + e.getMessage());
         }
-
         return null;
     }
 
     public User getUserUsingEmail(String email) {
         String query = "SELECT * FROM users WHERE email='" + email + "'";
+
         try {
             statement = connection.createStatement();
             resultSet = statement.executeQuery(query);
 
-            User user = null;
+            User user;
 
             if (resultSet != null && resultSet.next()) {
                 user = new User(
@@ -131,4 +130,3 @@ public class UserDao {
         return null;
     }
 }
-

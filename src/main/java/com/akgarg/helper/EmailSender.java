@@ -12,25 +12,23 @@ import java.io.IOException;
 
 public class EmailSender {
 
-    public static boolean sendEmail(String emailMessage, String destinationEmail) {
+    public static boolean sendEmail(String mailSubject, String emailMessage, String destinationEmail) {
         boolean otpSend = false;
 
-        Email from = new Email("SENDER-EMAIL-HERE");
-        String subject = "Reset Password";
+        Email from = new Email("akgarg0472@gmail.com");
         Email to = new Email(destinationEmail);
 
         Content content = new Content("text/html", emailMessage);
-        Mail mail = new Mail(from, subject, to, content);
-        SendGrid sg = new SendGrid("API-KEY-HERE");
+        Mail mail = new Mail(from, mailSubject, to, content);
+        SendGrid sg = new SendGrid("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");
         Request request = new Request();
+
         try {
             request.setMethod(Method.POST);
             request.setEndpoint("mail/send");
             request.setBody(mail.build());
             Response response = sg.api(request);
-//            System.out.println(((Response) response).getStatusCode());
-//            System.out.println(response.getBody());
-//            System.out.println(response.getHeaders());
+            System.out.println(response.getStatusCode() + ", " + response.getBody() + ", " + response.getHeaders());
             otpSend = true;
         } catch (IOException ex) {
             System.out.println("Exception in email sending: " + ex.getClass() + ", " + ex.getMessage());

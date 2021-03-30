@@ -7,25 +7,25 @@ function showContactInfo() {
 
 // javaScript code to animate user icon on login button hover
 $("#login-button").hover(function () {
-        $("#user-logo-span").addClass("fa-spin")
+        $("#user-logo-span").addClass("fa-spin");
     },
     function () {
-        $("#user-logo-span").removeClass("fa-spin")
+        $("#user-logo-span").removeClass("fa-spin");
     }
 )
 
-// this script code will run on the submission of the login form
+// this script code will run on the submission of the login form to login to existing account
 $("#login_form").on('submit', function (event) {
     event.preventDefault();
-
-    $("#unregister_username_text").hide();
-    $("#invalid_credentials_text").hide();
-
     let loginFormData = $(this).serialize();
 
-    $.post("submit_login_form", loginFormData, function (responseData, status, jqXHR) {
+    $("#login-button").prop('disabled', true);
+    $("#my-login-spinner").show();
+
+    $.post("submit_login_form", loginFormData, function (responseData) {
         let response = responseData.toString().trim();
-        console.log(response);
+        $("#login-button").prop('disabled', false);
+        $("#my-login-spinner").hide();
 
         if (response === "200") {
             location.href = "profile";
@@ -39,17 +39,18 @@ $("#login_form").on('submit', function (event) {
     });
 })
 
-// this script code will run on the submission of the signup form
+// this script code will run on the submission of the signup form for new user registration
 $("#signup_form").on('submit', function (event) {
     event.preventDefault();
-
     let signupFormData = $(this).serialize();
-    console.log(signupFormData)
+
+    $("#signup-button").prop('disabled', true);
+    $("#my-signup-spinner").show();
 
     $.post("submit_signup_form", signupFormData, function (responseData, status, jqXHR) {
         let response = responseData.toString().trim();
-
-        console.log(response);
+        $("#signup-button").prop('disabled', false);
+        $("#my-signup-spinner").hide();
 
         if (response === "1") {
             swal("Thank you for registering with us!", "You will be now redirected to login page!", "success").then((value => {
@@ -70,10 +71,10 @@ $("#signup_form").on('submit', function (event) {
 // this script code will run on the submission of the forgot password form
 $("#forgot_password_form").on('submit', function (event) {
     event.preventDefault();
+    let forgotPasswordFormData = $(this).serialize();
+
     $("#email-send-spinner").show();
     $("#send-email-button").prop('disabled', true);
-
-    let forgotPasswordFormData = $(this).serialize();
 
     $.post("submit_forgot_password_form", forgotPasswordFormData, function (responseData, status, jqXHR) {
         let response = responseData.toString().trim();
@@ -94,19 +95,15 @@ $("#forgot_password_form").on('submit', function (event) {
     })
 })
 
+// this script code will execute when user enters the otp code
 $("#forgot_password_otp_form").on('submit', function (event) {
     event.preventDefault();
-
     let otpEntered = $(this).serialize();
-
-    console.log(otpEntered);
 
     $.post("verify-otp", otpEntered, function (responseData, status, jqXHR) {
         let response = responseData.toString().trim();
-        console.log(response);
 
         if (response === "200") {
-            console.log(response)
             window.location = "change-password"
         } else if (response === "500") {
             swal("OTP mismatched");
@@ -116,6 +113,7 @@ $("#forgot_password_otp_form").on('submit', function (event) {
     })
 })
 
+// this script code will run after the submission of page that comes after the successful OTP entering by user
 $("#update-password-form").on('submit', function (event) {
     event.preventDefault();
 
@@ -124,8 +122,13 @@ $("#update-password-form").on('submit', function (event) {
     let newPassword = "new-password=" + confirmPassword;
 
     if (password === confirmPassword) {
+        $("#my-change-password-spinner").show();
+        $("#change-password-button").prop('disabled', true);
+
         $.post("update-password", newPassword, function (responseData, status, jqXHR) {
             let response = responseData.toString().trim();
+            $("#my-change-password-spinner").hide();
+            $("#change-password-button").prop('disabled', false);
 
             if (response === "200") {
                 swal("Password successfully updated, Redirecting to login page")
@@ -149,8 +152,13 @@ $("#update-profile-form").on('submit', function (event) {
     event.preventDefault();
     let formData = $(this).serialize();
 
+    $("#update-button-edit-profile").prop('disabled', true);
+    $("#cancel-button-edit-profile").prop('disabled', true);
+
     $.post("update-profile-data", formData, function (responseData, status, jqXHR) {
         let response = responseData.toString().trim();
+        $("#update-button-edit-profile").prop('disabled', false);
+        $("#cancel-button-edit-profile").prop('disabled', false);
 
         if (response === "405") {
             updateProfileStatus("Blank password not allowed", "text-danger");
@@ -170,7 +178,6 @@ $("#update-profile-form").on('submit', function (event) {
 // this method is used by the profile update form submission script
 function updateProfileStatus(response, color) {
     let element = document.getElementById("update-profile-result-message");
-
     element.innerHTML = response;
     element.className = color;
 

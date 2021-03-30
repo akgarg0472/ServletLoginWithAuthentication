@@ -26,6 +26,7 @@ public class ForgotPasswordServlet extends HttpServlet {
 
         if (user == null) {
             writer.println("404");
+            DatabaseConnectionHelper.closeConnections();
         } else {
             String username = user.getUsername();
             String otp = OtpGenerator.getOTP();
@@ -34,15 +35,26 @@ public class ForgotPasswordServlet extends HttpServlet {
             String emailMessage = "Dear <strong>" + username +
                     "</strong>,<br><br>" +
                     "OTP to reset password of your Servlet Project account is <strong>" + otp + "</strong>. " +
-                    "Use this OTP to reset your password.<br>If you have not request for the password reset, it means someone is trying to access your account. We recommend you to keep your account safe and secure.";
+                    "Use this OTP to reset your password." +
+                    "<br>" +
+                    "If you have not request for the password reset, it means someone is trying to access your account. We recommend you to keep your account safe and secure." +
+                    "<br>" +
+                    "<br>" +
+                    "<Strong>Regards</strong>" +
+                    "<br>" +
+                    "Akhilesh Garg" +
+                    "<br>" +
+                    "Admin-ServletProject";
 
-            boolean isEmailSend = EmailSender.sendEmail(emailMessage, email);
+            boolean isEmailSend = EmailSender.sendEmail("Reset Password", emailMessage, email);
 
             if (isEmailSend) {
                 session.setAttribute("OTP", otp);
                 session.setAttribute("forgot-email", email);
+                DatabaseConnectionHelper.closeConnections();
                 writer.println("200");
             } else {
+                DatabaseConnectionHelper.closeConnections();
                 writer.println("500");
             }
         }

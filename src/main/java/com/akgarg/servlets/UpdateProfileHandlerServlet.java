@@ -5,7 +5,6 @@ import com.akgarg.entity.User;
 import com.akgarg.helper.DatabaseConnectionHelper;
 import com.akgarg.helper.EmailSender;
 
-import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -16,11 +15,12 @@ import java.io.PrintWriter;
 public class UpdateProfileHandlerServlet extends HttpServlet {
 
     @Override
-    protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+    protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws IOException {
         PrintWriter writer = resp.getWriter();
         HttpSession session = req.getSession();
 
         User user = (User) session.getAttribute("currentLoginUser");
+
         if (user == null) {
             resp.sendRedirect("index");
         } else {
@@ -33,13 +33,13 @@ public class UpdateProfileHandlerServlet extends HttpServlet {
                 writer.println("405");
             } else if (password.equals(confirmPassword)) {
                 UserDao dao = new UserDao(DatabaseConnectionHelper.getConnection());
-                boolean updateUserResult = dao.updateUser(username, email, password, confirmPassword);
+                boolean updateUserResult = dao.updateUser(username, email, password);
 
                 if (updateUserResult) {
                     String emailMessage = "Dear <strong>" + user.getUsername() + "</strong>,<br>" +
                             "Password of your Servlet Project account is successfully updated. Use your new password to login to your account.<br><br>" +
                             "If you have not do the same, then please change your password immediately";
-                    EmailSender.sendEmail(emailMessage, email);
+                    EmailSender.sendEmail("Password updated Successfully", emailMessage, email);
                     writer.println("200");
                 } else {
                     writer.println("500");
@@ -47,6 +47,7 @@ public class UpdateProfileHandlerServlet extends HttpServlet {
             } else {
                 writer.println("404");
             }
+
             DatabaseConnectionHelper.closeConnections();
         }
     }

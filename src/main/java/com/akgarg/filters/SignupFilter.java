@@ -21,4 +21,14 @@ public class SignupFilter implements Filter {
             writer.println("error");
         }
     }
+
+    @Override
+    public void init(FilterConfig filterConfig) {
+
+    }
+
+    @Override
+    public void destroy() {
+
+    }
 }
