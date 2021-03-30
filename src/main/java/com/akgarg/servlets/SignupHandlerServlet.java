@@ -30,7 +30,6 @@ public class SignupHandlerServlet extends HttpServlet {
             int addUserResult = dao.addUser(user);
             /*
              * addUserResponse = 1 (successfully added)
-             * addUserResponse = 0 (user already registered)
              * addUserResponse = -1 (email already used)
              * addUserResponse = 404 (other SQLException)
              * */

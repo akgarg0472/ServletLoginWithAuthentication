@@ -41,9 +41,7 @@ public class UserDao {
         } catch (Exception e) {
             System.out.println("Exception in adding new user: " + e.getClass() + ", " + e.getMessage());
 
-            if (e.getMessage().contains("users.PRIMARY")) {
-                response = 0;
-            } else if (e.getMessage().contains("users.email")) {
+            if (e.getMessage().contains("PRIMARY")) {
                 response = -1;
             }
         }

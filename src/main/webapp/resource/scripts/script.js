@@ -51,13 +51,11 @@ $("#signup_form").on('submit', function (event) {
         let response = responseData.toString().trim();
         $("#signup-button").prop('disabled', false);
         $("#my-signup-spinner").hide();
-
+        
         if (response === "1") {
             swal("Thank you for registering with us!", "You will be now redirected to login page!", "success").then((value => {
                 window.location = "login";
             }))
-        } else if (response === "0") {
-            swal("Username already registered");
         } else if (response === "-1") {
             swal("Email already registered");
         } else if (response === "500") {
